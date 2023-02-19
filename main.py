@@ -9,6 +9,11 @@ pygame.display.set_caption("Placeholder title")
 clock = pygame.time.Clock()
 game_active = False
 
+
+def collision_sprite():
+	if pygame.sprite.spritecollide(player.sprite,level_groups,False):
+		player.sprite.gravity = -1
+
 test_font = pygame.font.Font(None, 50)
 
 with open('devlvl.json') as json_file:
@@ -27,6 +32,9 @@ player = pygame.sprite.GroupSingle()
 player.add(Player())
 blocks = pygame.sprite.Group()
 blocks.add(Block())
+
+level_groups = pygame.sprite.Group()
+level_groups.add(blocks)
 
 everything = pygame.sprite.Group()
 everything.add(player)
@@ -59,6 +67,7 @@ while True:
 		game_active = True
 
 	if game_active:
+		collision_sprite()
 		screen.blit(bg_surf, bg_rect)
 		player.draw(screen)
 		player.update()

@@ -3,8 +3,8 @@ import pygame
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		super().__init__()
-		self.image = pygame.image.load("resources/blobby.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (300, 300))
+		self.image = pygame.image.load("resources/blobbyG1.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 150))
 		self.rect = self.image.get_rect(center=(640, 360))
 		self.gravity = 0
 		self.velocity = 0
