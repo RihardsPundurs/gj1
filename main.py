@@ -11,6 +11,11 @@ game_active = False
 
 test_font = pygame.font.Font(None, 50)
 
+with open('devlvl.json') as json_file:
+  python_dict = json.load(json_file)
+  
+print(python_dict.get('Level'))
+
 while True:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
