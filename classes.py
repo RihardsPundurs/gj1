@@ -49,3 +49,11 @@ class Block(pygame.sprite.Sprite):
 		self.image = pygame.image.load("resources/girrafe.png").convert_alpha()
 		self.image = pygame.transform.scale(self.image, (300, 300))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+class Spike(pygame.sprite.Sprite):
+	def __init__(self, cords):
+		super().__init__()
+		self.cords = cords
+		self.image = pygame.image.load("resources/spike.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (300, 300))
+		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
