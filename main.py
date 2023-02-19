@@ -12,7 +12,7 @@ game_active = False
 test_font = pygame.font.Font(None, 50)
 
 with open('devlvl.json') as json_file:
-  python_dict = json.load(json_file)
+	python_dict = json.load(json_file)
   
 print(python_dict.get('Level'))
 
@@ -25,24 +25,48 @@ bg_rect = bg_surf.get_rect(center=(640, 360))
 
 player = pygame.sprite.GroupSingle()
 player.add(Player())
+blocks = pygame.sprite.Group()
+blocks.add(Block())
+
+everything = pygame.sprite.Group()
+everything.add(player)
+everything.add(blocks)
 
 while True:
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      pygame.quit()
-      exit()
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			pygame.quit()
+			exit()
 
-  keys = pygame.key.get_pressed()
-  if keys[pygame.K_RETURN]:
-    game_active = True
+	if player.sprites()[0].rect.x > 639:
+		for sprite in everything:
+			sprite.rect.x -= player.sprites()[0].velocity
 
-  if game_active:
-    screen.blit(bg_surf, bg_rect)
-	player.draw(screen)
-	player.update()
-  else:
-    screen.blit(bg_surf, bg_rect)
-    screen.blit(text_surf, text_rect)
+	if player.sprites()[0].rect.x < 641:
+		for sprite in everything:
+			sprite.rect.x -= player.sprites()[0].velocity
 
-  pygame.display.update()
-  clock.tick(60)
+	if player.sprites()[0].rect.y < 321:
+		for sprite in everything:
+			sprite.rect.y -= player.sprites()[0].gravity
+
+	if player.sprites()[0].rect.y > 319:
+		for sprite in everything:
+			sprite.rect.y -= player.sprites()[0].gravity
+
+	keys = pygame.key.get_pressed()
+	if keys[pygame.K_RETURN]:
+		game_active = True
+
+	if game_active:
+		screen.blit(bg_surf, bg_rect)
+		player.draw(screen)
+		player.update()
+		blocks.draw(screen)
+		blocks.update()
+	else:
+		screen.blit(bg_surf, bg_rect)
+		screen.blit(text_surf, text_rect)
+
+	pygame.display.update()
+	clock.tick(60)
