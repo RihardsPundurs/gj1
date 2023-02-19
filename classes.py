@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
 			if self.last_jump == False:
 				print("jumped2")
 				if self.on_ground == True:
-					self.gravity = -20
+					self.gravity = -40
 					print("jumped1")
 			self.last_jump = True
 		else:
@@ -55,5 +55,13 @@ class Spike(pygame.sprite.Sprite):
 		super().__init__()
 		self.cords = cords
 		self.image = pygame.image.load("resources/spike.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (300, 300))
+		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+class Platform(pygame.sprite.Sprite):
+	def __init__(self, cords):
+		super().__init__()
+		self.cords = cords
+		self.image = pygame.image.load("resources/branch.png").convert_alpha()
 		self.image = pygame.transform.scale(self.image, (300, 300))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))

@@ -52,6 +52,15 @@ def collision_sprite():
 			global game_active
 			game_active = False
 
+		if entity in platforms.sprites():
+			if bottom_side:
+				if player.sprite.gravity >= 0:
+					if player.sprite.gravity == 0 and not player.sprite.rect.bottom > entity.rect.top:
+						for sprite in everything:
+							sprite.rect.y += dist_bottom
+						player.sprite.rect.bottom = entity.rect.top
+						player.sprite.gravity = 0
+						player.sprite.on_ground = True
 
 test_font = pygame.font.Font(None, 50)
 
@@ -80,13 +89,18 @@ blocks.add(Block([640, 150]))
 spikes = pygame.sprite.Group()
 spikes.add(Spike([1240, 700]))
 
+platforms = pygame.sprite.Group()
+platforms.add(Platform([940, 400]))
+
 level_groups = pygame.sprite.Group()
 level_groups.add(blocks)
 level_groups.add(spikes)
+level_groups.add(platforms)
 
 everything = pygame.sprite.Group()
 everything.add(player)
 everything.add(blocks)
+everything.add(platforms)
 everything.add(spikes)
 
 while True:
