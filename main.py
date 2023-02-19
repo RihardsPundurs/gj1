@@ -11,8 +11,41 @@ game_active = False
 
 
 def collision_sprite():
-	if pygame.sprite.spritecollide(player.sprite,level_groups,False):
-		player.sprite.gravity = -1
+	for entity in pygame.sprite.spritecollide(player.sprite,level_groups,False):
+		dist_bottom = player.sprite.rect.bottom - entity.rect.top
+		dist_right = player.sprite.rect.right - entity.rect.left
+		dist_left = entity.rect.right - player.sprite.rect.left
+		dist_top = entity.rect.bottom - player.sprite.rect.top
+
+		bottom_side = dist_bottom < dist_right and dist_bottom < dist_left
+		top_side = dist_top < dist_right and dist_top < dist_left
+		right_side = dist_right <= dist_bottom and dist_right <= dist_top
+		left_side = dist_left <= dist_bottom and dist_left <= dist_top
+
+		if right_side:
+			for sprite in everything:
+				sprite.rect.x += dist_right
+			player.sprite.rect.right = entity.rect.left
+			player.sprite.velocity = 0
+		elif left_side:
+			for sprite in everything:
+				sprite.rect.x -= dist_left
+			player.sprite.rect.left = entity.rect.right
+			player.sprite.velocity = 0
+		# elif top_side:
+		# 	for sprite in everything:
+		# 		sprite.rect.y -= dist_top
+		# 	player.sprite.rect.top = entity.rect.bottom
+		# 	player.sprite.gravity = 0
+		elif bottom_side:
+			for sprite in everything:
+				sprite.rect.y += dist_bottom
+			player.sprite.rect.bottom = entity.rect.top
+			player.sprite.gravity = 0
+			player.sprite.on_ground = True
+		else:
+			player.sprite.on_ground = False
+
 
 test_font = pygame.font.Font(None, 50)
 
@@ -31,7 +64,12 @@ bg_rect = bg_surf.get_rect(center=(640, 360))
 player = pygame.sprite.GroupSingle()
 player.add(Player())
 blocks = pygame.sprite.Group()
-blocks.add(Block())
+blocks.add(Block([640, 700]))
+blocks.add(Block([940, 700]))
+blocks.add(Block([940, 400]))
+blocks.add(Block([340, 700]))
+blocks.add(Block([340, 400]))
+blocks.add(Block([640, 150]))
 
 level_groups = pygame.sprite.Group()
 level_groups.add(blocks)
