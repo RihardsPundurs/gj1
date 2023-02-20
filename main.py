@@ -57,8 +57,19 @@ def collision_sprite():
 					player.sprite.on_ground = False
 
 			if entity in spikes.sprites():
-				global game_active
-				game_active = False
+				for checkpoint in checkpoints.sprites():
+					if checkpoint.tag == player.sprite.respawn:
+						# player.sprite.rect.bottom = checkpoint.rect.bottom
+						# player.sprite.rect.right = checkpoint.rect.right
+						dist_right = player.sprite.rect.right - checkpoint.rect.right
+						dist_bottom = player.sprite.rect.bottom - checkpoint.rect.bottom
+						player.sprite.rect.bottom = checkpoint.rect.bottom
+						player.sprite.rect.right = checkpoint.rect.right
+
+						for sprite in everything:
+							sprite.rect.x += dist_right
+							sprite.rect.y += dist_bottom
+						break
 
 			if entity in platforms.sprites():
 				# if entity != last_suface:
@@ -95,6 +106,9 @@ def collision_sprite():
 						player.sprite.on_ground = False
 						player.sprite.plat = False
 
+			if entity in checkpoints.sprites():
+				if player.sprite.respawn < entity.tag:
+					player.sprite.respawn = entity.tag
 			# if entity in platforms_moving.sprites():
 			# 	# if entity != last_suface:
 			# 	if -20 < dist_bottom < 20:
@@ -148,11 +162,16 @@ platforms.add(Platform([940, 400]))
 platforms_disappearing = pygame.sprite.Group()
 platforms_disappearing.add(Platform_disappearing([340, 400]))
 
+checkpoints = pygame.sprite.Group()
+checkpoints.add(Checkpoint([640, 550], 0))
+checkpoints.add(Checkpoint([340, 550], 1))
+
 level_groups = pygame.sprite.Group()
 level_groups.add(blocks)
 level_groups.add(spikes)
 level_groups.add(platforms)
 level_groups.add(platforms_disappearing)
+level_groups.add(checkpoints)
 # level_groups.add(platforms_moving)
 
 everything = pygame.sprite.Group()
@@ -161,6 +180,7 @@ everything.add(blocks)
 everything.add(spikes)
 everything.add(platforms)
 everything.add(platforms_disappearing)
+everything.add(checkpoints)
 # everything.add(platforms_moving)
 
 while True:
@@ -196,10 +216,10 @@ while True:
 	if game_active:
 		collision_sprite()
 		screen.blit(bg_surf, bg_rect)
-		player.draw(screen)
-		player.update()
 		level_groups.draw(screen)
 		level_groups.update()
+		player.draw(screen)
+		player.update()
 	else:
 		screen.blit(bg_surf, bg_rect)
 		screen.blit(text_surf, text_rect)

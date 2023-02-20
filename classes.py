@@ -5,13 +5,14 @@ class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		super().__init__()
 		self.image = pygame.image.load("resources/blobbyG1.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (75, 75))
+		self.image = pygame.transform.scale(self.image, (150, 150))
 		self.rect = self.image.get_rect(center=(640, 360))
 		self.gravity = 0
 		self.velocity = 0
 		self.on_ground = False
 		self.last_jump = False
 		self.plat = False
+		self.respawn = 0
 
 	def player_input(self):
 		keys = pygame.key.get_pressed()
@@ -116,3 +117,12 @@ class Platform_disappearing(pygame.sprite.Sprite):
 			if self.wait_time+self.wait_duration <= time.time():
 				self.wait_time = None
 				self.active = True
+
+class Checkpoint(pygame.sprite.Sprite):
+	def __init__(self, cords, tag):
+		super().__init__()
+		self.cords = cords
+		self.tag = tag
+		self.image = pygame.image.load("resources/Log.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
