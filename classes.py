@@ -126,3 +126,29 @@ class Checkpoint(pygame.sprite.Sprite):
 		self.image = pygame.image.load("resources/Log.png").convert_alpha()
 		self.image = pygame.transform.scale(self.image, (150, 150))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+class Win_trigger(pygame.sprite.Sprite):
+	def __init__(self, cords):
+		super().__init__()
+		self.cords = cords
+		self.image = pygame.image.load("resources/Log.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+class Mushroom(pygame.sprite.Sprite):
+	def __init__(self, cords):
+		super().__init__()
+		self.cords = cords
+		self.image = pygame.image.load("resources/shroom1.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+class Wind(pygame.sprite.Sprite):
+	def __init__(self, cords, direction, speed):
+		super().__init__()
+		self.direction = direction
+		self.speed = speed
+		self.cords = cords
+		self.image = pygame.image.load("resources/Wind1.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
