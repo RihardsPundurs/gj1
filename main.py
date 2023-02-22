@@ -67,6 +67,8 @@ def collision_sprite():
 						dist_bottom = player.sprite.rect.bottom - checkpoint.rect.bottom
 						player.sprite.rect.bottom = checkpoint.rect.bottom
 						player.sprite.rect.right = checkpoint.rect.right
+						player.sprite.gravity = 0
+						player.sprite.velocity = 0
 
 						for sprite in everything:
 							sprite.rect.x += dist_right
@@ -152,15 +154,6 @@ def collision_sprite():
 				elif entity.direction == "down":
 					player.sprite.gravity += entity.speed
 
-			funny_list = total_list
-			# funny_list.pop(last_surface)
-			for entityf in funny_list:
-				if entityf in blocks.sprites() or entityf in platforms.sprites() or entityf in platforms_disappearing.sprites() :#and not entity in platforms.sprites() and not entity in platforms_disappearing.sprites()
-					print("yahoo")
-					player.sprite.on_ground = True
-					break
-				else:
-					player.sprite.on_ground = False
 			# if entity in platforms_moving.sprites():
 			# 	# if entity != last_suface:
 			# 	if -20 < dist_bottom < 20:
@@ -178,6 +171,15 @@ def collision_sprite():
 			# 			player.sprite.plat = False
 	except:
 		pass
+	funny_list = total_list
+	for entityf in funny_list:
+		if entityf in blocks.sprites() or entityf in platforms.sprites() or entityf in platforms_disappearing.sprites() :#and not entity in platforms.sprites() and not entity in platforms_disappearing.sprites()
+			player.sprite.on_ground = True
+			player.sprite.jump_index = 0
+			player.sprite.fall_index = 0
+			break
+		else:
+			player.sprite.on_ground = False
 
 test_font = pygame.font.Font(None, 50)
 
@@ -185,8 +187,6 @@ with open('leaderboard.json', 'r') as json_file:
 	leader_dict = json.load(json_file)
 leader_sorted_list = sorted(leader_dict.items(), key=lambda x:x[1])
 leaderboard = dict(leader_sorted_list)
-
-print(leaderboard)
 
 start_text_surf = test_font.render("Press ENTER to play", False, "Black")
 start_text_rect = start_text_surf.get_rect(center=(640, 360))
@@ -207,9 +207,8 @@ player = pygame.sprite.GroupSingle()
 player.add(Player())
 
 blocks = pygame.sprite.Group()
-for i in range(20):
-	blocks.add(Block([40 + i*150, 700]))
-blocks.add(Block([640, 150]))
+
+blocks.add(Block([640, 700], "top"))
 
 spikes = pygame.sprite.Group()
 spikes.add(Spike([1240, 550]))
