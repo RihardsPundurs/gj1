@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
 				print("jumped2")
 				if self.on_ground == True:
 					self.gravity = -40
-					print("jumped1")
+					print(self.on_ground)
 			self.last_jump = True
 		else:
 			self.last_jump = False

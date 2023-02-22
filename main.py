@@ -33,12 +33,6 @@ def collision_sprite():
 			right_side = dist_right <= dist_bottom and dist_right <= dist_top
 			left_side = dist_left <= dist_bottom and dist_left <= dist_top
 			collision = bottom_side or top_side or right_side or left_side
-			# funny_list = total_list.pop(last_suface)
-			# for entityf in funny_list:
-			# print(total_list)
-			# if not "<Block Sprite(in 3 groups)>" in total_list :#and not entity in platforms.sprites() and not entity in platforms_disappearing.sprites()
-			# 	print("yahoo")
-			# 	player.sprite.on_ground = False
 
 			if entity in blocks.sprites():
 				if right_side:
@@ -61,7 +55,7 @@ def collision_sprite():
 						sprite.rect.y += dist_bottom
 					player.sprite.rect.bottom = entity.rect.top
 					player.sprite.gravity = 0
-					last_suface = entity
+					# last_surface = entity
 					player.sprite.on_ground = True
 				else:
 					player.sprite.on_ground = False
@@ -80,7 +74,7 @@ def collision_sprite():
 						break
 
 			if entity in platforms.sprites():
-				# if entity != last_suface:
+				# if entity != last_surface:
 				if -20 < dist_bottom < 20:
 					player.sprite.plat = True
 				if player.sprite.last_jump == False and player.sprite.plat == True:
@@ -89,14 +83,14 @@ def collision_sprite():
 							sprite.rect.y += dist_bottom
 						player.sprite.rect.bottom = entity.rect.top
 						player.sprite.gravity = 0
-						last_suface = entity
+						# last_surface = entity
 						player.sprite.on_ground = True
 					else:
 						player.sprite.on_ground = False
 						player.sprite.plat = False
 
 			if entity in platforms_disappearing.sprites():
-				# if entity != last_suface:
+				# if entity != last_surface:
 				if -20 < dist_bottom < 20:
 					player.sprite.plat = True
 				if player.sprite.last_jump == False and player.sprite.plat == True and entity.active == True:
@@ -105,7 +99,7 @@ def collision_sprite():
 							sprite.rect.y += dist_bottom
 						player.sprite.rect.bottom = entity.rect.top
 						player.sprite.gravity = 0
-						last_suface = entity
+						# last_surface = entity
 						player.sprite.on_ground = True
 						if entity.touch_time == None:
 							if entity.wait_time == None:
@@ -146,7 +140,7 @@ def collision_sprite():
 						sprite.rect.y += dist_bottom
 					player.sprite.rect.bottom = entity.rect.top
 					player.sprite.gravity = -80
-					last_suface = entity
+					# last_surface = entity
 
 			if entity in winds.sprites():
 				if entity.direction == "right":
@@ -157,6 +151,16 @@ def collision_sprite():
 					player.sprite.gravity += -1*entity.speed
 				elif entity.direction == "down":
 					player.sprite.gravity += entity.speed
+
+			funny_list = total_list
+			# funny_list.pop(last_surface)
+			for entityf in funny_list:
+				if entityf in blocks.sprites() or entityf in platforms.sprites() or entityf in platforms_disappearing.sprites() :#and not entity in platforms.sprites() and not entity in platforms_disappearing.sprites()
+					print("yahoo")
+					player.sprite.on_ground = True
+					break
+				else:
+					player.sprite.on_ground = False
 			# if entity in platforms_moving.sprites():
 			# 	# if entity != last_suface:
 			# 	if -20 < dist_bottom < 20:
