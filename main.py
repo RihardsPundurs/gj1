@@ -253,7 +253,7 @@ mushrooms = pygame.sprite.Group()
 mushrooms.add(Mushroom([1840, 550]))
 
 winds = pygame.sprite.Group()
-winds.add(Wind([2140, 550], "up", 2))
+# winds.add(Wind([300, 0], "up", 1))
 
 level_groups = pygame.sprite.Group()
 level_groups.add(blocks)
@@ -341,6 +341,7 @@ while True:
         screen.blit(bg_surf, bg_rect)
         level_groups.draw(screen)
         level_groups.update()
+        winds.update()
         player.draw(screen)
         player.update()
         timer_text_surf = test_font.render(

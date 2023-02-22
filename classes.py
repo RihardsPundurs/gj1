@@ -251,6 +251,11 @@ class Win_trigger(pygame.sprite.Sprite):
 class Mushroom(pygame.sprite.Sprite):
 	def __init__(self, cords):
 		super().__init__()
+		mush_surf1 = pygame.image.load("resources/shroom1.png").convert_alpha()
+		mush_surf2 = pygame.image.load("resources/shroom2.png").convert_alpha()
+		mush_surf3 = pygame.image.load("resources/shroom3.png").convert_alpha()
+		mush_surf4 = pygame.image.load("resources/shroom4.png").convert_alpha()
+		mush_surf5 = pygame.image.load("resources/shroom5.png").convert_alpha()
 		self.cords = cords
 		self.image = pygame.image.load("resources/shroom1.png").convert_alpha()
 		self.image = pygame.transform.scale(self.image, (150, 150))
@@ -269,12 +274,24 @@ class Wind(pygame.sprite.Sprite):
 		self.direction = direction
 		self.speed = speed
 		self.cords = cords
-		self.image = pygame.transform.scale(self.surfs[self.index], (150, 150))
-		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+		self.image = pygame.transform.scale(self.surfs[self.index], (600, 150))
+		if self.direction == "right" or self.direction == "left":
+			self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+		elif self.direction == "up" or self.direction == "down":
+			self.rect = pygame.transform.rotate(self.image, 90).get_rect(center=(cords[0], cords[1]))
 
-		def animation_state(self):
-			self.image = pygame.transform.flip(pygame.transform.scale(self.surfs[round(self.index)%5], (150, 150)), True, False)
+	def animation_state(self):
+		if self.direction == "left":
+			self.image = pygame.transform.scale(self.surfs[round(self.index)%4], (600, 150))
 			self.index += 0.1
-
-		def update(self):
-			self.animation_state()
+		elif self.direction == "right":
+			self.image = pygame.transform.flip(pygame.transform.scale(self.surfs[round(self.index)%4], (600, 150)), True, False)
+			self.index += 0.1
+		elif self.direction == "up":
+			self.image = pygame.transform.rotate(pygame.transform.scale(self.surfs[round(self.index)%4], (600, 150)), -90)
+			self.index += 0.1
+		elif self.direction == "down":
+			self.image = pygame.transform.rotate(pygame.transform.scale(self.surfs[round(self.index)%4], (600, 150)), 90)
+			self.index += 0.1
+	def update(self):
+		self.animation_state()
