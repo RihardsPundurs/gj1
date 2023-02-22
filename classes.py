@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
 		if keys[pygame.K_SPACE] or keys[pygame.K_w]:
 			if self.last_jump == False:
 				if self.on_ground == True:
-					self.gravity = -40
+					self.gravity = -20
 			self.last_jump = True
 		else:
 			self.last_jump = False
@@ -171,15 +171,15 @@ class Spike(pygame.sprite.Sprite):
 		super().__init__()
 		self.cords = cords
 		self.image = pygame.image.load("resources/spike.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.image = pygame.transform.scale(self.image, (50, 50))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
 class Platform(pygame.sprite.Sprite):
 	def __init__(self, cords):
 		super().__init__()
 		self.cords = cords
-		self.image = pygame.image.load("resources/branch.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.image = pygame.image.load("resources/cloudplatform.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 75))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
 # class Platform_moving(pygame.sprite.Sprite):
@@ -216,8 +216,8 @@ class Platform_disappearing(pygame.sprite.Sprite):
 		self.wait_time = None
 		self.wait_duration = 5
 		self.active = True
-		self.image = pygame.image.load("resources/branch.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.image = pygame.image.load("resources/disscloud.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 75))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
 	def update(self):
@@ -236,7 +236,7 @@ class Checkpoint(pygame.sprite.Sprite):
 		super().__init__()
 		self.cords = cords
 		self.tag = tag
-		self.image = pygame.image.load("resources/Log.png").convert_alpha()
+		self.image = pygame.image.load("resources/CheckpointLit.png").convert_alpha()
 		self.image = pygame.transform.scale(self.image, (150, 150))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
