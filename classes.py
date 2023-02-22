@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
 		if keys[pygame.K_SPACE] or keys[pygame.K_w]:
 			if self.last_jump == False:
 				if self.on_ground == True:
-					self.gravity = -20
+					self.gravity = -40
 			self.last_jump = True
 		else:
 			self.last_jump = False
@@ -100,15 +100,15 @@ class Player(pygame.sprite.Sprite):
 						self.image = pygame.transform.scale(self.player_jump[round(self.jump_index)%5], (150, 150))
 					else:
 						self.image = pygame.transform.flip(pygame.transform.scale(self.player_jump[round(self.jump_index)%5], (150, 150)), True, False)
-					self.jump_index += 1
+					self.jump_index +=0.5
 				elif self.velocity < 0:
 					self.flip = True
 					self.image = pygame.transform.flip(pygame.transform.scale(self.player_jump[round(self.jump_index)%5], (150, 150)), True, False)
-					self.jump_index += 1
+					self.jump_index += 0.5
 				elif self.velocity > 0:
 					self.flip = False
 					self.image = pygame.transform.scale(self.player_jump[round(self.jump_index)%5], (150, 150))
-					self.jump_index += 1
+					self.jump_index += 0.5
 			else:
 				if self.velocity == 0:
 					if self.flip == False:
@@ -259,9 +259,22 @@ class Mushroom(pygame.sprite.Sprite):
 class Wind(pygame.sprite.Sprite):
 	def __init__(self, cords, direction, speed):
 		super().__init__()
+		wind_surf1 = pygame.image.load("resources/Wind1.png").convert_alpha()
+		wind_surf2 = pygame.image.load("resources/Wind2.png").convert_alpha()
+		wind_surf3 = pygame.image.load("resources/Wind3.png").convert_alpha()
+		wind_surf4 = pygame.image.load("resources/Wind4.png").convert_alpha()
+		self.surfs = [wind_surf1, wind_surf2, wind_surf3, wind_surf4]
+		self.index = 0
+
 		self.direction = direction
 		self.speed = speed
 		self.cords = cords
-		self.image = pygame.image.load("resources/Wind1.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.image = pygame.transform.scale(self.surfs[self.index], (150, 150))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+		def animation_state(self):
+			self.image = pygame.transform.flip(pygame.transform.scale(self.surfs[round(self.index)%5], (150, 150)), True, False)
+			self.index += 0.1
+
+		def update(self):
+			self.animation_state()
