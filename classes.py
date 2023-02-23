@@ -47,9 +47,9 @@ class Player(pygame.sprite.Sprite):
 		else:
 			self.last_jump = False
 
-		if keys[pygame.K_d] and self.velocity <= 30:
+		if keys[pygame.K_d] and self.velocity <= 30 and self.velocity < 15:
 			self.velocity += 1
-		elif keys[pygame.K_a] and self.velocity >= -30:
+		elif keys[pygame.K_a] and self.velocity >= -30 and self.velocity > -15:
 			self.velocity -= 1
 		else:
 			if self.velocity < 0:

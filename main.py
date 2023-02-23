@@ -15,6 +15,45 @@ end_time = None
 start_time = None
 win_bool = False
 
+_circle_cache = {}
+def _circlepoints(r):
+    r = int(round(r))
+    if r in _circle_cache:
+        return _circle_cache[r]
+    x, y, e = r, 0, 1 - r
+    _circle_cache[r] = points = []
+    while x >= y:
+        points.append((x, y))
+        y += 1
+        if e < 0:
+            e += 2 * y - 1
+        else:
+            x -= 1
+            e += 2 * (y - x) - 1
+    points += [(y, x) for x, y in points if x > y]
+    points += [(-x, y) for x, y in points if x]
+    points += [(x, -y) for x, y in points if y]
+    points.sort()
+    return points
+
+def render(text, font, gfcolor=pygame.Color('white'), ocolor=(0, 0, 0), opx=2):
+    textsurface = font.render(text, True, gfcolor).convert_alpha()
+    w = textsurface.get_width() + 2 * opx
+    h = font.get_height()
+
+    osurf = pygame.Surface((w, h + 2 * opx)).convert_alpha()
+    osurf.fill((0, 0, 0, 0))
+
+    surf = osurf.copy()
+
+    osurf.blit(font.render(text, True, ocolor).convert_alpha(), (0, 0))
+
+    for dx, dy in _circlepoints(opx):
+        surf.blit(osurf, (dx + opx, dy + opx))
+
+    surf.blit(textsurface, (opx, opx))
+    return surf
+
 
 def collision_sprite():
 	global last_surface
@@ -167,7 +206,7 @@ def collision_sprite():
 			player.sprite.on_ground = False
 
 
-test_font = pygame.font.Font(None, 50)
+test_font = pygame.font.Font("resources/Early GameBoy.ttf", 50)
 
 with open('leaderboard.json', 'r') as json_file:
 	leader_dict = json.load(json_file)
@@ -185,7 +224,11 @@ username_status = False
 username_text_surf = test_font.render(username, False, "Black")
 username_text_rect = username_text_surf.get_rect(center=(640, 360))
 
-bg_surf = pygame.image.load("resources/background.png").convert()
+game_bg_surf = pygame.image.load("resources/bg.png").convert()
+game_bg_surf = pygame.transform.scale(game_bg_surf, (1280, 720))
+game_bg_rect = game_bg_surf.get_rect(center=(640, 360))
+
+bg_surf = pygame.image.load("resources/bgmain.png").convert()
 bg_surf = pygame.transform.scale(bg_surf, (1280, 720))
 bg_rect = bg_surf.get_rect(center=(640, 360))
 
@@ -217,20 +260,20 @@ platforms = pygame.sprite.Group()
 platforms.add(Platform([940, 400]))
 
 platforms_disappearing = pygame.sprite.Group()
-platforms_disappearing.add(Platform_disappearing([0, -80]))
+# platforms_disappearing.add(Platform_disappearing([0, -80]))
 
 checkpoints = pygame.sprite.Group()
 checkpoints.add(Checkpoint([0, -113], 0))
-checkpoints.add(Checkpoint([450, -113], 1))
+# checkpoints.add(Checkpoint([450, -113], 1))
 
 win_trigger = pygame.sprite.GroupSingle()
-win_trigger.add(Win_trigger([150, 24]))
+# win_trigger.add(Win_trigger([150, 24]))
 
 mushrooms = pygame.sprite.Group()
 # mushrooms.add(Mushroom([150, 0]))
 
 winds = pygame.sprite.Group()
-# winds.add(Wind([300, 0], "up", 1))
+winds.add(Wind([300, 0], "up", 1))
 
 level_groups = pygame.sprite.Group()
 level_groups.add(blocks)
@@ -309,7 +352,7 @@ while True:
 
 	if game_active and not win_bool:
 		collision_sprite()
-		screen.blit(bg_surf, bg_rect)
+		screen.blit(game_bg_surf, game_bg_rect)
 		level_groups.draw(screen)
 		level_groups.update()
 		winds.update()
@@ -321,7 +364,7 @@ while True:
 		screen.blit(timer_text_surf, timer_text_rect)
 	elif game_active and win_bool:
 		collision_sprite()
-		screen.blit(bg_surf, bg_rect)
+		screen.blit(game_bg_surf, game_bg_rect)
 		level_groups.draw(screen)
 		player.draw(screen)
 		username_text_surf = test_font.render(username, False, "Black")
@@ -334,7 +377,8 @@ while True:
 		screen.blit(username_text_surf, username_text_rect)
 	else:
 		screen.blit(bg_surf, bg_rect)
-		screen.blit(start_text_surf, start_text_rect)
+		screen.blit(render("Press ENTER to play", test_font), start_text_rect)
+		# screen.blit(start_text_surf, start_text_rect)
 
 	pygame.display.update()
 	clock.tick(60)
