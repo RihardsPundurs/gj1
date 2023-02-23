@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
 		if keys[pygame.K_SPACE] or keys[pygame.K_w]:
 			if self.last_jump == False:
 				if self.on_ground == True:
-					self.gravity = -40
+					self.gravity = -20
 			self.last_jump = True
 		else:
 			self.last_jump = False
@@ -58,8 +58,6 @@ class Player(pygame.sprite.Sprite):
 				self.velocity -= 1
 
 	def animation_state(self):
-		# print(self.gravity)
-		# print(self.velocity)
 		if self.gravity == 1 and self.on_ground == True:
 			if self.velocity == 0:
 				if self.flip == False:
@@ -75,23 +73,6 @@ class Player(pygame.sprite.Sprite):
 				self.flip = False
 				self.image = pygame.transform.scale(self.player_stand[round(self.stand_index)%2], (150, 150))
 				self.stand_index += 0.05
-
-		# if self.gravity > 1:
-		# 	if self.fall_index <= 3:
-		# 		if self.velocity == 0:
-		# 			if self.flip == False:
-		# 				self.image = pygame.transform.scale(self.player_fall[round(self.fall_index)%4], (150, 150))
-		# 			else:
-		# 				self.image = pygame.transform.flip(pygame.transform.scale(self.player_fall[round(self.fall_index)%4], (150, 150)), True, False)
-		# 			self.fall_index += 1
-		# 		elif self.velocity < 0:
-		# 			self.flip = True
-		# 			self.image = pygame.transform.flip(pygame.transform.scale(self.player_fall[round(self.fall_index)%4], (150, 150)), True, False)
-		# 			self.fall_index += 1
-		# 		elif self.velocity > 0:
-		# 			self.flip = False
-		# 			self.image = pygame.transform.scale(self.player_fall[round(self.fall_index)%4], (150, 150))
-		# 			self.fall_index += 1
 
 		else:
 			if self.jump_index <= 4:
@@ -124,12 +105,6 @@ class Player(pygame.sprite.Sprite):
 					self.flip = False
 					self.image = pygame.transform.scale(self.player_fly[round(self.fly_index)%2], (150, 150))
 					self.fly_index += 0.1
-
-
-		# else:
-		# 	self.player_index += 0.02
-		# 	if self.player_index >= len(self.player_surface_list):self.player_index = 0
-		# 	self.image = self.player_surface_list[int(self.player_index)]
 
 	def apply_gravity(self):
 		self.gravity += 1
@@ -182,31 +157,6 @@ class Platform(pygame.sprite.Sprite):
 		self.image = pygame.transform.scale(self.image, (150, 75))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
-# class Platform_moving(pygame.sprite.Sprite):
-# 	def __init__(self, cords, interval):
-# 		super().__init__()
-# 		self.cords = cords
-# 		self.interval = interval
-# 		self.speed = 2
-# 		self.distance = 0
-# 		self.image = pygame.image.load("resources/branch.png").convert_alpha()
-# 		self.image = pygame.transform.scale(self.image, (150, 150))
-# 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
-
-# 	def update(self):
-# 		if self.rect.x > self.cords[0] + self.interval*-1 and self.rect.x > self.cords[0] + self.interval and self.speed > 0:
-# 			self.speed = -2
-# 		elif self.rect.x < self.cords[0] + self.interval*-1 and self.rect.x < self.cords[0] + self.interval and self.speed < 0:
-# 			self.speed = 2
-
-# 		self.distance += self.speed
-# 		self.rect.x += self.speed
-# 		print(self.rect.x)
-# 		print(self.speed)
-# 		print(self.rect.x - self.cords[0] - self.interval*-1 - self.distance)
-# 		print(self.rect.x + self.interval*-1)
-# 		print(self.interval)
-
 class Platform_disappearing(pygame.sprite.Sprite):
 	def __init__(self, cords):
 		super().__init__()
@@ -216,7 +166,8 @@ class Platform_disappearing(pygame.sprite.Sprite):
 		self.wait_time = None
 		self.wait_duration = 5
 		self.active = True
-		self.image = pygame.image.load("resources/disscloud.png").convert_alpha()
+		self.image1 = pygame.image.load("resources/disscloud.png").convert_alpha()
+		self.image = self.image1
 		self.image = pygame.transform.scale(self.image, (150, 75))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
@@ -226,26 +177,30 @@ class Platform_disappearing(pygame.sprite.Sprite):
 				self.touch_time = None
 				self.active = False
 				self.wait_time = time.time()
+				self.image = pygame.transform.scale(self.image1, (0,0))
 		if self.wait_time != None:
 			if self.wait_time+self.wait_duration <= time.time():
 				self.wait_time = None
 				self.active = True
+				self.image = pygame.transform.scale(self.image1, (150, 75))
 
 class Checkpoint(pygame.sprite.Sprite):
 	def __init__(self, cords, tag):
 		super().__init__()
 		self.cords = cords
 		self.tag = tag
-		self.image = pygame.image.load("resources/CheckpointLit.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.check_surf1 = pygame.image.load("resources/CheckpointUnlit.png").convert_alpha()
+		self.check_surf2 = pygame.image.load("resources/CheckpointLit.png").convert_alpha()
+		self.image = self.check_surf1
+		self.image = pygame.transform.scale(self.image, (150, 375))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
 class Win_trigger(pygame.sprite.Sprite):
 	def __init__(self, cords):
 		super().__init__()
 		self.cords = cords
-		self.image = pygame.image.load("resources/Log.png").convert_alpha()
-		self.image = pygame.transform.scale(self.image, (150, 150))
+		self.image = pygame.image.load("resources/crown.png").convert_alpha()
+		self.image = pygame.transform.scale(self.image, (150, 102))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
 
 class Mushroom(pygame.sprite.Sprite):
@@ -256,10 +211,20 @@ class Mushroom(pygame.sprite.Sprite):
 		mush_surf3 = pygame.image.load("resources/shroom3.png").convert_alpha()
 		mush_surf4 = pygame.image.load("resources/shroom4.png").convert_alpha()
 		mush_surf5 = pygame.image.load("resources/shroom5.png").convert_alpha()
+		self.surfs = [mush_surf1, mush_surf2, mush_surf3, mush_surf4, mush_surf5]
+		self.index = 5
 		self.cords = cords
 		self.image = pygame.image.load("resources/shroom1.png").convert_alpha()
 		self.image = pygame.transform.scale(self.image, (150, 150))
 		self.rect = self.image.get_rect(center=(cords[0], cords[1]))
+
+	def animation_state(self):
+		if self.index <= 4:
+			self.image = pygame.transform.scale(self.surfs[round(self.index)%5], (150, 150))
+			self.index += 0.5
+
+	def update(self):
+		self.animation_state()
 
 class Wind(pygame.sprite.Sprite):
 	def __init__(self, cords, direction, speed):
@@ -293,5 +258,6 @@ class Wind(pygame.sprite.Sprite):
 		elif self.direction == "down":
 			self.image = pygame.transform.rotate(pygame.transform.scale(self.surfs[round(self.index)%4], (600, 150)), 90)
 			self.index += 0.1
+
 	def update(self):
 		self.animation_state()
