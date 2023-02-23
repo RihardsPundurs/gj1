@@ -36,29 +36,38 @@ class Player(pygame.sprite.Sprite):
 		self.last_jump = False
 		self.plat = False
 		self.respawn = 0
+		self.win_bool = False
 
 	def player_input(self):
-		keys = pygame.key.get_pressed()
-		if keys[pygame.K_SPACE] or keys[pygame.K_w]:
-			if self.last_jump == False:
-				if self.on_ground == True:
-					self.gravity = -20
-			self.last_jump = True
-		else:
-			self.last_jump = False
+		if not self.win_bool:
+			keys = pygame.key.get_pressed()
+			if keys[pygame.K_SPACE] or keys[pygame.K_w]:
+				if self.last_jump == False:
+					if self.on_ground == True:
+						self.gravity = -20
+				self.last_jump = True
+			else:
+				self.last_jump = False
 
-		if keys[pygame.K_d] and self.velocity <= 30 and self.velocity < 15:
-			self.velocity += 1
-		elif keys[pygame.K_a] and self.velocity >= -30 and self.velocity > -15:
-			self.velocity -= 1
+			if keys[pygame.K_d] and self.velocity <= 30 and self.velocity < 15:
+				self.velocity += 1
+			elif keys[pygame.K_a] and self.velocity >= -30 and self.velocity > -15:
+				self.velocity -= 1
+			else:
+				if self.velocity < 0:
+					self.velocity += 1
+				elif self.velocity > 0:
+					self.velocity -= 1
 		else:
 			if self.velocity < 0:
-				self.velocity += 1
-			elif self.velocity > 0:
-				self.velocity -= 1
+				self.velocity += 0.5
+			elif self. velocity > 0:
+				self.velocity -= 0.5
 
 	def animation_state(self):
-		if self.gravity == 1 and self.on_ground == True:
+		if self.win_bool:
+			self.image = pygame.transform.scale(self.player_win, (150, 150))
+		elif self.gravity == 1 and self.on_ground == True:
 			if self.velocity == 0:
 				if self.flip == False:
 					self.image = pygame.transform.scale(self.player_stand[round(self.stand_index)%2], (150, 150))
