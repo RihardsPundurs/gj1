@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
 			if keys[pygame.K_SPACE] or keys[pygame.K_w]:
 				if self.last_jump == False:
 					if self.on_ground == True:
-						self.gravity = -20
+						self.gravity = -25
 				self.last_jump = True
 			else:
 				self.last_jump = False
@@ -53,6 +53,8 @@ class Player(pygame.sprite.Sprite):
 				self.velocity += 1
 			elif keys[pygame.K_a] and self.velocity >= -30 and self.velocity > -15:
 				self.velocity -= 1
+			elif (keys[pygame.K_a] or keys[pygame.K_d]) and (self.velocity == -30 or self.velocity == 30):
+				self.velocity = self.velocity
 			else:
 				if self.velocity < 0:
 					self.velocity += 1
